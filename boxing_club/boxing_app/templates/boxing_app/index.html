@@ -1,0 +1,929 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boxing Club</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    /* --- New Hero Section --- */
+    .carousel-inner img {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      filter: brightness(60%);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      z-index: 2;
+    }
+
+    .hero-content h2 {
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero-content span {
+      color: #e63946;
+    }
+
+    .hero-content p {
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    .hero-img-box {
+      border: 2px solid #e63946;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 350px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .hero-img-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #e63946;
+    }
+
+    .hero-img-box img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Smooth fade transition for hero and text section */
+    section {
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  opacity: 1;
+  transform: translateY(0);
+  }
+  .fade-text-section {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  }
+  .fade-text-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+  }
+
+    .hero-images {
+      transition: opacity 1s ease;
+    }
+
+    footer {
+      background-color: #1a1a1a;
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      margin-top: 50px;
+    }
+    /* --- About Boxes Section --- */
+    .about-boxes-section {
+      background: linear-gradient(to bottom, #000000, #111111);
+    }
+
+    .about-box {
+      background: #1a1a1a;
+      border-radius: 12px;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-top: 4px solid #e63946;
+    }
+
+    .about-box:hover {
+      transform: translateY(-10px);
+      background: #222;
+    }
+
+    .about-box i {
+      font-size: 2rem;
+      color: #e63946;
+      margin-bottom: 10px;
+    }
+
+    .about-box h5 {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .about-box p {
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+
+    /* Popup Box */
+    .popup-box {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .popup-box.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .popup-content {
+      background: #1a1a1a;
+      border-radius: 15px;
+      padding: 40px;
+      max-width: 600px;
+      color: white;
+      transform: scale(0.8);
+      transition: all 0.4s ease;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .popup-box.active .popup-content {
+      transform: scale(1);
+    }
+
+    .close-popup {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #fff;
+      cursor: pointer;
+    }
+    /* --- Responsive Fix for Mobile (Below 768px) --- */
+   @media (max-width: 768px) {
+  .hero-content {
+    padding: 1rem;
+    text-align: center;
+    justify-content: flex-end;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero-content h2 {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero-img-box img {
+    height: 200px;
+  }
+
+  .blockquote {
+    font-size: 0.9rem;
+  }
+
+  .blockquote-footer {
+    font-size: 0.8rem;
+  }
+
+  .quote-box {
+    padding: 1rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .working-hours {
+    padding: 1.5rem !important;
+  }
+
+  /* Reduce navbar spacing */
+  .navbar-brand span {
+    font-size: 1rem;
+  }
+
+  .navbar-toggler {
+    border: none;
+  }
+
+  /* Make sure carousel images look right */
+  .carousel-item img {
+    height: 90vh;
+    object-position: center;
+  }
+  }
+  .image-gallery {
+  background-color: #111;
+  color: #fff;
+  padding-top: 60px;
+  padding-bottom: 60px;
+  text-align: center;
+}
+
+.gallery-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5dfc6;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.gallery-subtitle {
+  font-size: 1rem;
+  color: #ccc;
+  max-width: 700px;
+  margin: 0 auto 40px;
+}
+
+/* ✅ Use Grid Layout for Images */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-in-out;
+}
+
+/* ✅ When visible, fade in + move up */
+.gallery-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.5s ease;
+  border-radius: 10px;
+}
+
+/* ✅ Hover Effect */
+.gallery-img:hover {
+  transform: scale(1.08);
+  filter: brightness(1.2);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .gallery-title {
+    font-size: 1.8rem;
+  }
+  .gallery-subtitle {
+    font-size: 0.9rem;
+  }
+}
+ /* Fade animation for all sections */
+section {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+/* When visible */
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.testimonials-section {
+  background: url("{% static 'images/gym-bg.jpg' %}") center/cover no-repeat;
+  color: #fff;
+  position: relative;
+}
+
+.testimonials-section::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.testimonials-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.section-title {
+  color: #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.testimonial-text {
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto 20px;
+  color: #fff;
+}
+
+.testimonial-image img {
+  width: 80px;
+  height: 80px;
+  border: 3px solid #FFD700;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #ffffff;
+  border-radius: 50%;
+  padding: 10px;
+}
+.contact-section {
+  background: #000;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-section .section-title {
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.contact-text {
+  font-size: 1rem;
+  color: #ddd;
+}
+
+.contact-info p {
+  margin: 5px 0;
+  color: #fff;
+}
+
+.social-icons a {
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-right: 15px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #ff0000;
+  transform: scale(1.2);
+}
+
+/* Contact Card */
+.contact-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+}
+
+.contact-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  filter: blur(12px) brightness(0.5);
+  z-index: 1;
+}
+
+.contact-form-content .form-control {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.contact-form-content .form-control:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.contact-form-content label {
+  color: #bbb;
+}
+
+.btn-warning {
+  background: linear-gradient(45deg, #ff0000, #ffffff);
+  border: none;
+  transition: all 0.4s ease;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+}
+
+/* Fade animation */
+.contact-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.contact-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+
+
+
+  </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="100" tabindex="0">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'images/pexels-njmn-34621804.jpg' %}" alt="Logo"> BOXING CLUB
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#facilities">Facilities</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ Updated Hero Section with Scroll Fade Transition -->
+  <section class="hero-section" id="home">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner hero-images">
+        <div class="carousel-item active">
+          <img src="{% static 'images/pexels-cottonbro-4761671.jpg' %}" class="d-block w-100" alt="Boxing 1">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'images/pexels-cottonbro-4752871.jpg' %}" class="d-block w-100" alt="Boxing 2">
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content" data-aos="fade-up">
+      <h2>KEEP YOUR BODY</h2>
+      <h1>FIT & <span>STRONG</span></h1>
+      <p>“Some do it to show off, some do it to grow, but only some do it for more.”</p>
+
+      <!-- <div class="hero-images d-flex justify-content-center gap-4 mt-4">
+        <div class="hero-img-box" data-aos="zoom-in" data-aos-delay="200">
+          <img src="{% static 'images/pexels-pixabay-163351.jpg' %}" alt="Training">
+        </div>
+        <div class="hero-img-box" data-aos="zoom-in" data-aos-delay="400">
+          <img src="{% static 'images/pexels-wang-motret-35777729-7261725.jpg' %}" alt="Boxer">
+        </div> -->
+      </div>
+    </div>
+
+    <!-- ✅ Motivational Text Section (Fades in while scrolling) -->
+    <div class="fade-text-section text-center text-white py-5">
+      <div class="container">
+        <div class="row justify-content-center align-items-center">
+          <div class="col-md-6 mb-4" data-aos="fade-up">
+            <blockquote class="blockquote text-white">
+              “BOXING IS LIKE JAZZ. THE BETTER IT IS, THE LESS PEOPLE APPRECIATE IT”
+              <footer class="blockquote-footer text-white-50 mt-2">SARITA DEVI</footer>
+            </blockquote>
+          </div>
+          <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+            <h4 class="fw-bold text-danger"><i class="bi bi-clock-history me-2"></i>WORKING HOURS</h4>
+            <p class="fst-italic">"I hated every minute of training, but I said, ‘Don’t quit. Suffer now and live the rest of your life as a champion.’"</p>
+            <p class="text-danger fw-bold mb-0">FROM MONDAY TO SATURDAY</p>
+            <p class="fw-semibold">6 A.M. – 10 A.M.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ABOUT SECTION -->
+  <section class="about-boxes-section py-5 text-white" id="about">
+    <div class="container text-center">
+      <div class="mb-5" data-aos="fade-up">
+        <h2 class="section-title fw-bold">ABOUT OUR CLUB</h2>
+        <p class="text-muted">Our mission, goals, and philosophy that define us.</p>
+      </div>
+
+      <div class="about-container">
+
+        <div class="about-box" data-aos="fade-up">
+          <div class="about-header" data-aos="slide-down" data-aos-delay="100">
+            <i class="bi bi-lightning-charge-fill"></i>
+            <h5>MISSION</h5>
+          </div>
+          <div class="about-body" data-aos="fade-up" data-aos-delay="200">
+            <p>Our goal is to empower individuals through the practice of true martial arts.</p>
+          </div>
+        </div>
+
+        <div class="about-box" data-aos="fade-up">
+          <div class="about-header" data-aos="slide-down" data-aos-delay="200">
+            <i class="bi bi-eye-fill"></i>
+            <h5>VISION</h5>
+          </div>
+          <div class="about-body" data-aos="fade-up" data-aos-delay="300">
+            <p>Our goal is to create a safe and supportive atmosphere where people may learn directly from the best professors on the planet.</p>
+          </div>
+        </div>
+
+        <div class="about-box" data-aos="fade-up">
+          <div class="about-header" data-aos="slide-down" data-aos-delay="300">
+            <i class="bi bi-rocket-takeoff-fill"></i>
+            <h5>GOAL</h5>
+          </div>
+          <div class="about-body" data-aos="fade-up" data-aos-delay="400">
+            <p>We provide a platform for both amateur and professional athletes who desire to advance their careers. Any age is welcome.</p>
+          </div>
+        </div>
+
+        <div class="about-box" data-aos="fade-up">
+          <div class="about-header" data-aos="slide-down" data-aos-delay="400">
+            <i class="bi bi-bullseye"></i>
+            <h5>DESIRE</h5>
+          </div>
+          <div class="about-body" data-aos="fade-up" data-aos-delay="500">
+            <p>You can anticipate top-notch martial arts instruction at our clubs because we are working hard to improve our quality standards.</p>
+          </div>
+        </div>
+
+        <div class="about-box" data-aos="fade-up">
+          <div class="about-header" data-aos="slide-down" data-aos-delay="500">
+            <i class="bi bi-heart-pulse-fill"></i>
+            <h5>PHILOSOPHY</h5>
+          </div>
+          <div class="about-body" data-aos="fade-up" data-aos-delay="600">
+            <p>Animals who cannot defend themselves do not last long in this world. There are levels that come following physics-based fighting.</p>
+          </div>
+        </div>
+
+        <div class="about-box" data-aos="fade-up">
+          <div class="about-header" data-aos="slide-down" data-aos-delay="600">
+            <i class="bi bi-gear-fill"></i>
+            <h5>TESTAMENT</h5>
+          </div>
+          <div class="about-body" data-aos="fade-up" data-aos-delay="700">
+            <p>You must stand up for what you believe in. Negative traits and shortcomings must be overcome. To be your best self, you must put up a fight.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Popup Box -->
+  <div class="popup-box" id="popupBox">
+    <div class="popup-content">
+      <span class="close-popup" id="closePopup">&times;</span>
+      <h4 id="popupTitle"></h4>
+      <p id="popupText"></p>
+    </div>
+  </div>
+
+  <!-- Facilities Section -->
+  <section class="facilities-section py-5 text-white" id="facilities">
+    <div class="container">
+      <div class="text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title fw-bold">OUR FACILITIES</h2>
+        <p class="text-muted">Everything you need to train like a pro.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="facility-card p-4 text-center bg-dark rounded shadow-lg">
+            <i class="bi bi-activity fs-1 text-danger mb-3"></i>
+            <h5 class="fw-bold">Strength Training</h5>
+            <p>Dedicated area for muscle conditioning and endurance improvement.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="facility-card p-4 text-center bg-dark rounded shadow-lg">
+            <i class="bi bi-heart-pulse fs-1 text-danger mb-3"></i>
+            <h5 class="fw-bold">Cardio Zone</h5>
+            <p>Boost your stamina with advanced cardio and endurance workouts.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="facility-card p-4 text-center bg-dark rounded shadow-lg">
+            <i class="bi bi-boxing-glove fs-1 text-danger mb-3"></i>
+            <h5 class="fw-bold">Boxing Ring</h5>
+            <p>Practice like professionals in our well-equipped boxing arena.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+           <!-- ===== IMAGE GALLERY SECTION ===== -->
+ <section id="gallery" class="image-gallery py-5">
+  <div class="container text-center">
+    <h2 class="gallery-title">IMAGE GALLERY</h2>
+    <p class="gallery-subtitle">A glimpse into our state-of-the-art facilities and vibrant training environment.</p>
+
+    <div class="row g-4 mt-4">
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-gustavo-fring-6720438.jpg' %}" alt="Boxing Ring" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-gustavo-fring-6720452.jpg' %}" alt="Gym Exterior" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-gustavo-fring-6720432.jpg' %}" alt="Training Area" class="img-fluid rounded shadow gallery-img">
+      </div>
+
+    <div class="row g-4 mt-4">
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-rdne-7045668.jpg' %}" alt="Boxing Ring" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-cottonbro-4752865.jpg' %}" alt="Gym Exterior" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-cottonbro-4752825.jpg' %}" alt="Training Area" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-vlad-dediu-161185-2581662.jpg' %}" alt="Equipment Room" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-cottonbro-6203490.jpg' %}" alt="Workout Zone" class="img-fluid rounded shadow gallery-img">
+      </div>
+      <div class="col-md-4 col-sm-6 gallery-item">
+        <img src="{% static 'images/pexels-rdne-7045589.jpg' %}" alt="Fitness Space" class="img-fluid rounded shadow gallery-img">
+      </div>
+    </div>
+  </div>
+  </section>
+
+
+    <!-- Testimonials Section -->
+  <section id="testimonials" class="testimonials-section py-5" data-aos="fade-up">
+  <div class="container text-center">
+    <h2 class="section-title mb-4">TESTIMONIALS</h2>
+
+    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+
+        <!-- Testimonial 1 -->
+        <div class="carousel-item active">
+          <p class="testimonial-text">
+            "By far the best gym I have ever been to! Extremely professional staff who are dedicated and care deeply
+            about your improvement. Shout out to personal trainer Shanavas who has been helping me get fit and pushes me
+            to challenge my endurance and stamina."
+          </p>
+          <div class="testimonial-image">
+            <img src="{% static 'images/pexels-cottonbro-4754145.jpg' %}" alt="User 1" class="rounded-circle">
+          </div>
+          <h5 class="testimonial-name mt-3">- Pratibha Chauhan</h5>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="carousel-item">
+          <p class="testimonial-text">
+            "Amazing atmosphere and excellent trainers! The equipment is top-notch and always clean. Highly recommend
+            this gym for anyone serious about fitness."
+          </p>
+          <div class="testimonial-image">
+            <img src="{% static 'images/pexels-alexapopovich-14762167.jpg' %}" alt="User 2" class="rounded-circle">
+          </div>
+          <h5 class="testimonial-name mt-3">- Rahul Menon</h5>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="carousel-item">
+          <p class="testimonial-text">
+            "Fantastic place to train! The staff motivate you every step of the way, and the vibe here makes every
+            workout enjoyable."
+          </p>
+          <div class="testimonial-image">
+            <img src="{% static 'images/pexels-rdne-7005111.jpg' %}" alt="User 3" class="rounded-circle">
+          </div>
+          <h5 class="testimonial-name mt-3">- Sneha Krishnan</h5>
+        </div>
+
+      </div>
+
+      <!-- Carousel Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+  </section>
+
+  <!-- ================= Contact Us Section ================= -->
+ <section id="contact" class="contact-section py-5" data-aos="fade-up">
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <!-- Left Side - Info -->
+      <div class="col-md-5 text-white mb-4 mb-md-0">
+        <h2 class="section-title mb-4">CONTACT US</h2>
+        <p class="contact-text mb-4">
+          Have questions, suggestions, or need guidance on your fitness journey?  
+          Drop us a message — we’ll get back to you shortly!
+        </p>
+        <div class="contact-info">
+          <p><i class="bi bi-geo-alt-fill me-2 text-warning"></i> Kalpathi, Palakkad, Kerala</p>
+          <p><i class="bi bi-telephone-fill me-2 text-warning"></i> +91 98765 43210</p>
+          <p><i class="bi bi-envelope-fill me-2 text-warning"></i> info@fitzonegym.com</p>
+        </div>
+        <div class="social-icons mt-4">
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+          <a href="#"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- Right Side - Form -->
+      <div class="col-md-6">
+        <div class="contact-card p-4 rounded-4 position-relative overflow-hidden">
+          <img src="{% static 'images/gym-bg2.jpg' %}" class="contact-bg" alt="">
+          <div class="contact-form-content position-relative z-2">
+            <form action="#" method="post">
+              {% csrf_token %}
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                <label for="name">Your Name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                <label for="email">Your Email</label>
+              </div>
+              <div class="form-floating mb-3">
+                <textarea class="form-control" id="message" placeholder="Your Message" style="height: 120px" required></textarea>
+                <label for="message">Your Message</label>
+              </div>
+              <button type="submit" class="btn btn-warning w-100 py-2 fw-bold rounded-pill shadow-lg">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="footer py-4 text-center text-white-50" data-aos="fade-up">
+    <p>© 2025 Title Boxing Club | Designed by Aswin Raj 🥊</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS animations
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: false,
+      mirror: true,
+      offset: 120,
+    });
+
+    // 🌫 Directional smooth fade-out effect on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section');
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const midScreen = scrollY + windowHeight / 2;
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = scrollY + rect.top;
+        const sectionCenter = sectionTop + rect.height / 2;
+        const distanceFromMid = sectionCenter - midScreen;
+
+        // Base opacity range
+        const fadeRange = windowHeight * 0.6;
+        const fadeAmount = Math.min(Math.abs(distanceFromMid) / fadeRange, 1);
+
+        // Directional transform: up when past, down when approaching
+        const direction = distanceFromMid < 0 ? -1 : 1;
+        const moveY = direction * fadeAmount * 25; // move max 25px
+
+        // Apply fade and translation
+        section.style.opacity = 1 - fadeAmount * 0.7;
+        section.style.transform = `translateY(${moveY}px)`;
+      });
+    });
+      
+
+    // 🌄 Scroll fade effect between hero images and motivational text
+    window.addEventListener('scroll', () => {
+      const hero = document.querySelector('.hero-images');
+      const fadeText = document.querySelector('.fade-text-section');
+      if (!hero || !fadeText) return;
+
+      const scrollY = window.scrollY;
+      const triggerPoint = hero.offsetTop + hero.offsetHeight / 2;
+
+      if (scrollY > triggerPoint - 200) {
+        hero.style.opacity = Math.max(0, 1 - (scrollY - triggerPoint + 200) / 300);
+        fadeText.classList.add('visible');
+      } else {
+        hero.style.opacity = 1;
+        fadeText.classList.remove('visible');
+      }
+    });
+
+        // Gallery Fade-in
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const galleryObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          galleryObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    galleryItems.forEach(item => galleryObserver.observe(item));
+
+
+    // 💬 Popup box logic for About section
+    const popupBox = document.getElementById('popupBox');
+    const closePopup = document.getElementById('closePopup');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupText = document.getElementById('popupText');
+
+    if (popupBox && closePopup && popupTitle && popupText) {
+      document.querySelectorAll('.about-box').forEach(box => {
+        box.addEventListener('click', () => {
+          const title = box.querySelector('h5')?.textContent || "Information";
+          const text = box.getAttribute('data-content') || "No details available.";
+          popupTitle.textContent = title;
+          popupText.textContent = text;
+          popupBox.classList.add('active');
+        });
+      });
+
+      closePopup.addEventListener('click', () => popupBox.classList.remove('active'));
+      popupBox.addEventListener('click', (e) => {
+        if (e.target === popupBox) popupBox.classList.remove('active');
+      });
+    }
+  </script>
+</body>
+</html>
